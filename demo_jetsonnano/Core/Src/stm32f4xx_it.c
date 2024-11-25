@@ -42,8 +42,8 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 extern uint8_t PCrxBuffer[RX_BUFFER_SIZE];
-uint32_t linear_vel = 0;
-uint32_t angular_vel = 0;
+int32_t linear_vel = 0;
+int32_t angular_vel = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

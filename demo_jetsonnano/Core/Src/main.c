@@ -54,10 +54,10 @@ uint32_t adc_filter_sum = 0;
 uint32_t filtered_buffer[3] = {0,};
 
 uint8_t PCrxBuffer[RX_BUFFER_SIZE];
-extern uint32_t linear_vel;
-extern uint32_t angular_vel;
-int32_t velocity_0 = 0;		//max : 250, right
-int32_t velocity_1 = 0;		//max : 250, left
+extern int32_t linear_vel;
+extern int32_t angular_vel;
+float velocity_0 = 0;		//max : 250, right
+float velocity_1 = 0;		//max : 250, left
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -70,9 +70,9 @@ void sendPsd();
 
 void operatingMode(uint8_t motor_id);
 void enableTorque(uint8_t motor_id);
-void sendGoalVelocity(uint8_t motor_id, uint32_t velocity);
+void sendGoalVelocity(uint8_t motor_id, int32_t velocity);
 
-void convertlineangVelToSpeed(uint32_t linear_vel, uint32_t angular_vel);
+void convertlineangVelToSpeed(int32_t linear_vel, int32_t angular_vel);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -168,8 +168,8 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  sendPsd();
 	  convertlineangVelToSpeed(linear_vel, angular_vel);
-	  sendGoalVelocity(0, (velocity_0 * 2));
-	  sendGoalVelocity(1, -(velocity_1 * 2));
+	  sendGoalVelocity(0, -(velocity_0 * 10));
+	  sendGoalVelocity(1, (velocity_1 * 10));
   }
   /* USER CODE END 3 */
 }
@@ -342,7 +342,7 @@ void operatingMode(uint8_t motor_id) {
   writePacket3(packet, index);
 }
 
-void sendGoalVelocity(uint8_t motor_id, uint32_t velocity) {
+void sendGoalVelocity(uint8_t motor_id, int32_t velocity) {
   uint8_t packet[16];
   size_t index = 0;
 
@@ -370,9 +370,9 @@ void sendGoalVelocity(uint8_t motor_id, uint32_t velocity) {
 
   writePacket3(packet, index);
 }
-void convertlineangVelToSpeed(uint32_t linear_vel, uint32_t angular_vel) {
-	velocity_0 = linear_vel + (angular_vel * 9);
-	velocity_1 = linear_vel - (angular_vel * 9);
+void convertlineangVelToSpeed(int32_t linear_vel, int32_t angular_vel) {
+	velocity_0 = linear_vel + (angular_vel * 0.9);
+	velocity_1 = linear_vel - (angular_vel * 0.9);
 }
 /* USER CODE END 4 */
 

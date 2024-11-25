@@ -16,5 +16,5 @@
 ../Core/Src/main.c:293:6:enableTorque	40	static
 ../Core/Src/main.c:319:6:operatingMode	40	static
 ../Core/Src/main.c:345:6:sendGoalVelocity	40	static
-../Core/Src/main.c:373:6:convertlineangVelToSpeed	16	static
+../Core/Src/main.c:373:6:convertlineangVelToSpeed	24	static
 ../Core/Src/main.c:383:6:Error_Handler	4	static,ignoring_inline_asm
