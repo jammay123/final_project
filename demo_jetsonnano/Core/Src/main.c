@@ -52,6 +52,7 @@ uint32_t adc1_buffer_for6[3][6] = {0,};
 uint8_t adc_filter_index = 0;
 uint32_t adc_filter_sum = 0;
 uint32_t filtered_buffer[3] = {0,};
+uint8_t send_psd_flag = 0;
 
 uint8_t PCrxBuffer[RX_BUFFER_SIZE];
 extern int32_t linear_vel;
@@ -73,6 +74,7 @@ void enableTorque(uint8_t motor_id);
 void sendGoalVelocity(uint8_t motor_id, int32_t velocity);
 
 void convertlineangVelToSpeed(int32_t linear_vel, int32_t angular_vel);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -166,7 +168,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  sendPsd();
+	  if(send_psd_flag) {
+		  sendPsd();
+		  send_psd_flag = 0;
+	  }
 	  convertlineangVelToSpeed(linear_vel, angular_vel);
 	  sendGoalVelocity(0, -(velocity_0 * 10));
 	  sendGoalVelocity(1, (velocity_1 * 10));
@@ -243,6 +248,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 			filtered_buffer[i] = adc_filter_sum / 6;
 		}
 	}
+	send_psd_flag = 1;
 }
 unsigned short update_crc(unsigned short crc_accum, unsigned char *data_blk_ptr, unsigned short data_blk_size)
 {
@@ -370,6 +376,7 @@ void sendGoalVelocity(uint8_t motor_id, int32_t velocity) {
 
   writePacket3(packet, index);
 }
+
 void convertlineangVelToSpeed(int32_t linear_vel, int32_t angular_vel) {
 	velocity_0 = linear_vel + (angular_vel * 0.9);
 	velocity_1 = linear_vel - (angular_vel * 0.9);
