@@ -1,0 +1,34 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/jammay/robot_ws/install/turtlebot3_fake_node/include/**",
+        "/home/jammay/robot_ws/install/turtlebot3_msgs/include/**",
+        "/home/jammay/robot_ws/install/turtlebot3_gazebo/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/jammay/robot_ws/src/cam_params_pkg/include/**",
+        "/home/jammay/robot_ws/src/demo_imu_cal/include/**",
+        "/home/jammay/robot_ws/src/final_project/include/**",
+        "/home/jammay/robot_ws/src/pid_imu_motor/include/**",
+        "/home/jammay/robot_ws/src/ros2-udp-bridge/udp_connection/include/**",
+        "/home/jammay/robot_ws/src/serial/include/**",
+        "/home/jammay/robot_ws/src/test1_maze/include/**",
+        "/home/jammay/robot_ws/src/turtlebot3_simulation_intern/include/**",
+        "/home/jammay/robot_ws/src/turtlebot3_simulations_internship/turtlebot3_fake_node/include/**",
+        "/home/jammay/robot_ws/src/turtlebot3_simulations_internship/turtlebot3_gazebo/include/**",
+        "/home/jammay/robot_ws/src/turtlebot3_simulations_internship/turtlebot3_status_manager/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
