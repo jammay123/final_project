@@ -57,8 +57,8 @@ uint8_t send_psd_flag = 0;
 uint8_t PCrxBuffer[RX_BUFFER_SIZE];
 extern int32_t linear_vel;
 extern int32_t angular_vel;
-float velocity_0 = 0;		//max : 250, right
-float velocity_1 = 0;		//max : 250, left
+int32_t velocity_0 = 0;		//max : 250, right
+int32_t velocity_1 = 0;		//max : 250, left
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -173,8 +173,8 @@ int main(void)
 		  send_psd_flag = 0;
 	  }
 	  convertlineangVelToSpeed(linear_vel, angular_vel);
-	  sendGoalVelocity(0, -(velocity_0 * 10));
-	  sendGoalVelocity(1, (velocity_1 * 10));
+	  sendGoalVelocity(0, -velocity_0);
+	  sendGoalVelocity(1, velocity_1);
   }
   /* USER CODE END 3 */
 }
