@@ -1,5 +1,6 @@
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
+#include <std_msgs/msg/int32.hpp>
 #include <cmath>
 #include <sstream>
 #include <vector>
@@ -12,18 +13,20 @@ public:
   {
     subscription_ = this->create_subscription<std_msgs::msg::String>(
         "imu/data_demo", 10, std::bind(&ImuSubscriber::topicCallback, this, std::placeholders::_1));
+
+    yaw_publisher_ = this->create_publisher<std_msgs::msg::Int32>("imu/yaw_int", 10);
+
     RCLCPP_INFO(this->get_logger(), "IMU 서브스크라이버 init");
   }
 
 private:
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+  rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr yaw_publisher_;
   double prev_yaw_;
   double alpha_;
 
   void topicCallback(const std_msgs::msg::String::SharedPtr msg)
   {
-    RCLCPP_INFO(this->get_logger(), "Raw IMU Data: %s", msg->data.c_str());
-
     std::string cleaned_data = removeHeader(msg->data);
 
     std::vector<double> imu_data = parseImuData(cleaned_data);
@@ -34,8 +37,7 @@ private:
       double imu_z = imu_data[0];
       double imu_w = imu_data[3];
 
-      double yaw = atan2(2.0 * (imu_x * imu_y + imu_w * imu_z),
-                         imu_w * imu_w + imu_x * imu_x - imu_y * imu_y - imu_z * imu_z);
+      double yaw = atan2(2.0 * (imu_x * imu_y + imu_w * imu_z), imu_w * imu_w + imu_x * imu_x - imu_y * imu_y - imu_z * imu_z);
 
       double yaw_angle = yaw * (180.0 / M_PI);
 
@@ -47,9 +49,15 @@ private:
 
       int yaw_int = static_cast<int>(filtered_yaw);
 
-      RCLCPP_INFO(this->get_logger(), "Filtered Yaw (int): %d degrees", yaw_int);
-    } else {
-      RCLCPP_ERROR(this->get_logger(), "Invalid IMU data for Yaw calculation!");
+      RCLCPP_INFO(this->get_logger(), "YAW(도): %d", yaw_int);
+
+      // 퍼블리시
+      auto yaw_msg = std_msgs::msg::Int32();
+      yaw_msg.data = yaw_int;
+      yaw_publisher_->publish(yaw_msg);
+    }
+    else {
+      RCLCPP_ERROR(this->get_logger(), "잘못된 값 받아옴");
     }
   }
 
@@ -69,10 +77,9 @@ private:
     while (std::getline(ss, token, ',')) {
       try {
         parsed_data.push_back(std::stod(token));
-      } catch (const std::invalid_argument &e) {
-        RCLCPP_ERROR(this->get_logger(), "Invalid data: %s", token.c_str());
-      } catch (const std::out_of_range &e) {
-        RCLCPP_ERROR(this->get_logger(), "Out of range data: %s", token.c_str());
+      }
+      catch (const std::out_of_range &e) {
+        // 예외 무시
       }
     }
     return parsed_data;

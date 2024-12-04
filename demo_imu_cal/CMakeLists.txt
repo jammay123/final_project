@@ -10,21 +10,15 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 
-add_executable(imu_to_yaw_node src/imu_to_yaw.cpp)
+add_executable(imu_subscriber_node src/imu_to_yaw.cpp)
 
-target_include_directories(imu_to_yaw_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-
-target_compile_features(imu_to_yaw_node PUBLIC c_std_99 cxx_std_17)
-
-ament_target_dependencies(imu_to_yaw_node
+ament_target_dependencies(imu_subscriber_node
   rclcpp
   std_msgs
 )
 
 install(TARGETS
-  imu_to_yaw_node
+  imu_subscriber_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
